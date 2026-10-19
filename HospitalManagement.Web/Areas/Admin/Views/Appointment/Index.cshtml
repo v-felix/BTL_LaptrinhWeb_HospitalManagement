@@ -1,4 +1,163 @@
-@model List<Appointment>
-@{ViewData["Title"]="Quản lý lịch hẹn khám";}
-<form method="get" class="filter-panel"><div><label for="q" class="form-label">Tên / SĐT / Mã lịch</label><input id="q" name="q" value="@ViewBag.Q" class="form-control"/></div><div><label for="date" class="form-label">Ngày khám</label><input id="date" name="date" type="date" value="@(ViewBag.Date is DateOnly date?date.ToString("yyyy-MM-dd"):"")" class="form-control"/></div><div><label for="status" class="form-label">Trạng thái</label><select id="status" name="status" class="form-select"><option value="">Tất cả</option>@foreach(var s in Enum.GetValues<BookingStatus>()){<option value="@s" selected="@(s==(BookingStatus?)ViewBag.Status)">@Display.Status(s)</option>}</select></div><div><label for="doctorId" class="form-label">Bác sĩ</label><select id="doctorId" name="doctorId" class="form-select"><option value="">Tất cả</option>@foreach(Doctor d in ViewBag.Doctors){<option value="@d.Id" selected="@(d.Id==(int?)ViewBag.DoctorId)">@d.User.FullName</option>}</select></div><button class="btn btn-primary">Lọc</button><a asp-action="Index" class="btn btn-light">Xóa lọc</a></form>
-<div class="table-responsive"><table class="table"><thead><tr><th>Bệnh nhân / Mã lịch</th><th>Bác sĩ</th><th>Ngày giờ</th><th>Trạng thái</th><th>Điều phối</th></tr></thead><tbody>@foreach(var a in Model){<tr><td><a asp-area="" asp-controller="Appointment" asp-action="Details" asp-route-id="@a.Id"><strong>@a.PatientName</strong></a><br/><small>@a.Reference · Số @a.SerialNo</small><br/><span class="small-muted">@a.PatientPhone</span></td><td>@a.Doctor.User.FullName</td><td>@a.AppointmentDate.ToString("dd/MM/yyyy")<br/>@a.AppointmentTime.ToString("HH:mm")</td><td><span class="status @a.Status">@Display.Status(a.Status)</span></td><td>@if(a.Status==BookingStatus.Pending){<form asp-action="Status" method="post" class="mb-2"><input name="id" type="hidden" value="@a.Id"/><input name="status" type="hidden" value="Confirmed"/><input name="rowVersion" type="hidden" value="@Convert.ToBase64String(a.RowVersion)"/><button class="btn btn-primary btn-sm">Xác nhận</button></form>}@if(a.Status is BookingStatus.Pending or BookingStatus.Confirmed){<form asp-action="Status" method="post" data-confirm="Hủy lịch khám này?"><input name="id" type="hidden" value="@a.Id"/><input name="status" type="hidden" value="Cancelled"/><input name="rowVersion" type="hidden" value="@Convert.ToBase64String(a.RowVersion)"/><div class="action-row"><input name="reason" maxlength="1000" class="form-control form-control-sm" placeholder="Lý do hủy" aria-label="Lý do hủy" required/><button class="btn btn-outline-danger btn-sm">Hủy lịch</button></div></form>}</td></tr>}</tbody></table></div>@if(!Model.Any()){<p class="empty mt-3">Không có lịch hẹn phù hợp.</p>}
+@model AppointmentListVM
+@{
+    ViewData["Title"] = "Quản lý lịch hẹn khám";
+    var dateValue = Model.Date?.ToString("yyyy-MM-dd");
+    var filters = new Dictionary<string, string>
+    {
+        ["date"] = dateValue ?? "",
+        ["status"] = Model.Status?.ToString() ?? "",
+        ["doctorId"] = Model.DoctorId?.ToString() ?? "",
+        ["q"] = Model.Q ?? ""
+    };
+}
+<form asp-action="Index" method="get" class="filter-panel">
+    <div>
+        <label for="q" class="form-label">Tên / SĐT / Mã lịch</label>
+        <input id="q" name="q" value="@Model.Q" class="form-control" />
+    </div>
+    <div>
+        <label for="date" class="form-label">Ngày khám</label>
+        <input id="date" name="date" type="date" value="@dateValue" class="form-control" />
+    </div>
+    <div>
+        <label for="status" class="form-label">Trạng thái</label>
+        <select id="status" name="status" class="form-select">
+            <option value="">Tất cả</option>
+            @foreach (var status in Enum.GetValues<BookingStatus>())
+            {
+                <option value="@status" selected="@(status == Model.Status)">@Display.Status(status)</option>
+            }
+        </select>
+    </div>
+    <div>
+        <label for="doctorId" class="form-label">Bác sĩ</label>
+        <select id="doctorId" name="doctorId" class="form-select">
+            <option value="">Tất cả</option>
+            @foreach (var doctor in Model.Doctors)
+            {
+                <option value="@doctor.Id" selected="@(doctor.Id == Model.DoctorId)">@doctor.User.FullName</option>
+            }
+        </select>
+    </div>
+    <button class="btn btn-primary">Lọc</button>
+    <a asp-action="Index" class="btn btn-light">Xóa lọc</a>
+</form>
+
+<div class="table-responsive">
+    <table class="table">
+        <thead>
+            <tr><th>Bệnh nhân / Mã lịch</th><th>Bác sĩ</th><th>Ngày giờ</th><th>Trạng thái</th><th>Điều phối</th></tr>
+        </thead>
+        <tbody>
+            @foreach (var appointment in Model.Appointments)
+            {
+                <tr>
+                    <td>
+                        <a asp-area="" asp-controller="Appointment" asp-action="Details" asp-route-id="@appointment.Id"><strong>@appointment.PatientName</strong></a><br />
+                        <small>@appointment.Reference · Số @appointment.SerialNo</small><br />
+                        <span class="small-muted">@appointment.PatientPhone</span>
+                    </td>
+                    <td>@appointment.Doctor.User.FullName</td>
+                    <td>@appointment.AppointmentDate.ToString("dd/MM/yyyy")<br />@appointment.AppointmentTime.ToString("HH:mm")</td>
+                    <td><span class="status @appointment.Status">@Display.Status(appointment.Status)</span></td>
+                    <td>
+                        @if (appointment.Status == BookingStatus.Pending)
+                        {
+                            <form asp-action="Status" method="post" class="mb-2">
+                                <input name="id" type="hidden" value="@appointment.Id" />
+                                <input name="status" type="hidden" value="Confirmed" />
+                                <input name="rowVersion" type="hidden" value="@Convert.ToBase64String(appointment.RowVersion)" />
+                                <input name="date" type="hidden" value="@dateValue" />
+                                <input name="filterStatus" type="hidden" value="@Model.Status" />
+                                <input name="doctorId" type="hidden" value="@Model.DoctorId" />
+                                <input name="q" type="hidden" value="@Model.Q" />
+                                <input name="page" type="hidden" value="@Model.PageNumber" />
+                                <button class="btn btn-primary btn-sm">Xác nhận</button>
+                            </form>
+                        }
+                        @if (appointment.Status is BookingStatus.Pending or BookingStatus.Confirmed)
+                        {
+                            <form asp-action="Status" method="post" data-confirm="Hủy lịch khám này?">
+                                <input name="id" type="hidden" value="@appointment.Id" />
+                                <input name="status" type="hidden" value="Cancelled" />
+                                <input name="rowVersion" type="hidden" value="@Convert.ToBase64String(appointment.RowVersion)" />
+                                <input name="date" type="hidden" value="@dateValue" />
+                                <input name="filterStatus" type="hidden" value="@Model.Status" />
+                                <input name="doctorId" type="hidden" value="@Model.DoctorId" />
+                                <input name="q" type="hidden" value="@Model.Q" />
+                                <input name="page" type="hidden" value="@Model.PageNumber" />
+                                <div class="action-row">
+                                    <input name="reason" maxlength="1000" class="form-control form-control-sm" placeholder="Lý do hủy" aria-label="Lý do hủy" required />
+                                    <button class="btn btn-outline-danger btn-sm">Hủy lịch</button>
+                                </div>
+                            </form>
+                        }
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>
+@if (Model.TotalCount == 0)
+{
+    <p class="empty mt-3">Không có lịch hẹn phù hợp.</p>
+}
+else
+{
+    <div class="appointment-pagination d-flex flex-wrap align-items-center justify-content-between gap-3 mt-3">
+        <p class="small-muted mb-0">Hiển thị @Model.FirstItem–@Model.LastItem / @Model.TotalCount lịch hẹn</p>
+        @if (Model.TotalPages > 1)
+        {
+            <nav aria-label="Phân trang lịch hẹn khám" class="no-print">
+                <ul class="pagination pagination-sm mb-0">
+                    @if (Model.PageNumber > 1)
+                    {
+                        <li class="page-item"><a class="page-link" asp-action="Index" asp-all-route-data="filters" asp-route-page="@(Model.PageNumber - 1)" rel="prev" aria-label="Trang trước">Trước</a></li>
+                    }
+                    else
+                    {
+                        <li class="page-item disabled"><span class="page-link" aria-disabled="true">Trước</span></li>
+                    }
+                    <li class="page-item d-sm-none"><span class="page-link" aria-current="page">Trang @Model.PageNumber / @Model.TotalPages</span></li>
+                    @if (Model.StartPage > 1)
+                    {
+                        <li class="page-item d-none d-sm-block"><a class="page-link" asp-action="Index" asp-all-route-data="filters" asp-route-page="1" aria-label="Trang 1">1</a></li>
+                        @if (Model.StartPage > 2)
+                        {
+                            <li class="page-item disabled d-none d-sm-block"><span class="page-link" aria-hidden="true">…</span></li>
+                        }
+                    }
+                    @for (var pageNumber = Model.StartPage; pageNumber <= Model.EndPage; pageNumber++)
+                    {
+                        <li class="page-item d-none d-sm-block @(pageNumber == Model.PageNumber ? "active" : "")">
+                            @if (pageNumber == Model.PageNumber)
+                            {
+                                <span class="page-link" aria-current="page" aria-label="Trang @pageNumber">@pageNumber</span>
+                            }
+                            else
+                            {
+                                <a class="page-link" asp-action="Index" asp-all-route-data="filters" asp-route-page="@pageNumber" aria-label="Trang @pageNumber">@pageNumber</a>
+                            }
+                        </li>
+                    }
+                    @if (Model.EndPage < Model.TotalPages)
+                    {
+                        @if (Model.EndPage < Model.TotalPages - 1)
+                        {
+                            <li class="page-item disabled d-none d-sm-block"><span class="page-link" aria-hidden="true">…</span></li>
+                        }
+                        <li class="page-item d-none d-sm-block"><a class="page-link" asp-action="Index" asp-all-route-data="filters" asp-route-page="@Model.TotalPages" aria-label="Trang @Model.TotalPages">@Model.TotalPages</a></li>
+                    }
+                    @if (Model.PageNumber < Model.TotalPages)
+                    {
+                        <li class="page-item"><a class="page-link" asp-action="Index" asp-all-route-data="filters" asp-route-page="@(Model.PageNumber + 1)" rel="next" aria-label="Trang sau">Sau</a></li>
+                    }
+                    else
+                    {
+                        <li class="page-item disabled"><span class="page-link" aria-disabled="true">Sau</span></li>
+                    }
+                </ul>
+            </nav>
+        }
+    </div>
+}
