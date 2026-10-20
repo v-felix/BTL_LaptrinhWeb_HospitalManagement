@@ -2,6 +2,17 @@
 
 Hospital Management là đồ án môn **Lập trình Web**, xây dựng hệ thống hỗ trợ đặt lịch và quản lý hoạt động khám bệnh tại Xet Hospital. Hệ thống kết nối bệnh nhân, bác sĩ, nhân viên tiếp nhận, kỹ thuật viên và quản trị viên trong các công việc: tiếp nhận lịch hẹn, khám và kê đơn, trả kết quả xét nghiệm, đăng ký gói khám và theo dõi hồ sơ.
 
+**Website đã triển khai:** [Xet Hospital](https://btl-laptrinhweb-hospitalmanagement.onrender.com/)
+
+## Thành viên thực hiện
+
+| STT | Họ và tên | Mã sinh viên | Vai trò |
+|---|---|---|---|
+| 1 | Phùng Nguyễn Trọng An | 242630900 | Nhóm trưởng |
+| 2 | Nguyễn Viết Khanh | 242630950 | Thành viên |
+| 3 | Nguyễn Đức Mạnh | 242630961 | Thành viên |
+| 4 | Lê Đức Tài | 242630972 | Thành viên |
+
 ## Sơ đồ phân tầng chức năng
 
 ```mermaid
