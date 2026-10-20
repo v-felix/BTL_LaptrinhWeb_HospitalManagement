@@ -28,6 +28,7 @@ public class BookingController(ApplicationDbContext db, IWebHostEnvironment env,
         if (!AccessService.VersionMatches(booking.RowVersion, rowVersion)) return Conflict("Phiếu đã thay đổi.");
         booking.Status = status; booking.PaymentStatus = paymentStatus;
         try { await db.SaveChangesAsync(); } catch (DbUpdateConcurrencyException) { return Conflict("Phiếu đã thay đổi."); }
+        TempData["Success"] = "Đã cập nhật tiếp nhận xét nghiệm.";
         return RedirectToAction(nameof(Index));
     }
     [HttpGet] public async Task<IActionResult> Result(int id)

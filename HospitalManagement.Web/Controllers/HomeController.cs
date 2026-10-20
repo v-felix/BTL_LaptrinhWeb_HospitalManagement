@@ -43,6 +43,13 @@ public class HomeController(ApplicationDbContext db) : Controller
         var article = await db.News.AsNoTracking().FirstOrDefaultAsync(x => x.Id == id && x.IsPublished && x.PublishedDate <= HospitalClock.Today);
         return article == null ? NotFound() : View(article);
     }
+    [Route("Home/HttpError/{statusCode:int:range(400,599)}")]
+    [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
+    public IActionResult HttpError(int statusCode)
+    {
+        Response.StatusCode = statusCode;
+        return statusCode == 404 ? View("NotFound") : StatusCode(statusCode);
+    }
     [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
     public IActionResult Error() => View(new ErrorViewModel { RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier });
 }
