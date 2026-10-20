@@ -62,7 +62,6 @@ app.Use(async (context, next) =>
     context.Response.Headers["X-Frame-Options"] = "SAMEORIGIN";
     await next();
 });
-app.UseStatusCodePagesWithReExecute("/Home/HttpError/{0}");
 app.UseStaticFiles();
 app.UseRouting();
 app.UseAuthentication();
