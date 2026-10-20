@@ -1,0 +1,33 @@
+:root {
+  --paper: #F6F2E9;
+  --paper-raised: #FBF9F3;
+  --ink: #17211F;
+  --ink-muted: #4F5B57;
+  --rule: #D8D1C0;
+  --edge: #8A8470;
+  --pine-900: #0E3B36;
+  --pine-700: #1B5A52;
+  --pine-100: #DCE9E4;
+  --saffron-200: #F2DDAA;
+  /* #B23A2B on vermilion-100 was 4.44:1; slightly darker for small error text. */
+  --vermilion-600: #AF382B;
+  --vermilion-100: #F3D9D3;
+  --clay-100: #EBD9CC;
+  --slate-100: #D9DFE0;
+  --sage-100: #E0E5D0;
+  --font-body: 'IBM Plex Sans', 'Xet Sans fallback', sans-serif;
+  --font-heading: 'Source Serif 4', Georgia, serif;
+  --font-code: 'IBM Plex Mono', 'IBM Plex Sans', monospace;
+  --space-1: 4px; --space-2: 8px; --space-3: 12px; --space-4: 16px;
+  --space-6: 24px; --space-8: 32px; --space-12: 48px;
+  --space-18: 72px; --space-28: 112px;
+  --radius-control: 2px; --radius-panel: 4px;
+  --overlay-shadow: 0 8px 24px rgba(23,33,31,.14);
+  --overlay-scrim: rgba(23,33,31,.3);
+  --motion-duration: 160ms;
+  --page-width: 1200px; --portal-width: 1440px;
+  --bs-primary-rgb: 14,59,54; --bs-body-color: var(--ink);
+  --bs-body-bg: var(--paper); --bs-body-font-family: var(--font-body);
+  --bs-border-color: var(--rule); --bs-link-color: var(--pine-900);
+  color-scheme: light;
+}
