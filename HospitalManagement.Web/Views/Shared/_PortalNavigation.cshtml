@@ -1,0 +1,14 @@
+@{
+var links=new List<(string Group,string Text,string Url,string Icon)>();
+if(User.IsInRole(Roles.Admin))links.AddRange(new[]{("Điều hành","Tổng quan","/Admin/Dashboard","house"),("Điều hành","Tài khoản","/Admin/User","users"),("Điều hành","Bác sĩ","/Admin/User?role=Doctor","user"),("Điều hành","Nhân viên","/Admin/User?role=Staff","users"),("Điều hành","Lịch làm việc","/Admin/Schedule","clock"),("Danh mục","Xét nghiệm","/Admin/Service","flask"),("Danh mục","Gói khám","/Admin/HealthCheck","clipboard-text"),("Danh mục","Tin tức","/Admin/News","file-text")});
+if(User.IsInRole(Roles.Staff))links.Add(("Tiếp nhận","Hôm nay","/Staff/Dashboard","house"));
+if(User.IsInRole(Roles.Admin)||User.IsInRole(Roles.Staff))links.AddRange(new[]{("Phiếu và thu phí","Lịch hẹn khám","/Admin/Appointment","calendar-blank"),("Phiếu và thu phí","Gói khám và thu phí","/Admin/PackageBooking","receipt")});
+if(User.IsInRole(Roles.Doctor))links.AddRange(new[]{("Khám bệnh","Lịch khám của tôi","/Doctor/Appointment","calendar-blank"),("Khám bệnh","Ca làm việc","/Doctor/Schedule","clock"),("Khám bệnh","Thông báo nội bộ","/Doctor/Message","bell")});
+if(User.IsInRole(Roles.Admin)||User.IsInRole(Roles.Diagnostic))links.Add(("Xét nghiệm","Tiếp nhận và kết quả","/Diagnostic/Booking","flask"));
+if(User.IsInRole(Roles.Diagnostic))links.Add(("Xét nghiệm","Danh mục dịch vụ","/Admin/Service","clipboard-text"));
+links.AddRange(new[]{("Cá nhân","Lịch hẹn và hồ sơ","/Patient","file-text"),("Cá nhân","Thông tin tài khoản","/Account/Profile","user"),("Cá nhân","Đổi mật khẩu","/Account/Password","key")});
+string? group=null;var current=Context.Request.Path.Value??"";
+}
+<nav class="portal-navigation" aria-label="Không gian làm việc">
+@foreach(var link in links){if(group!=link.Group){group=link.Group;<p class="portal-nav-group">@group</p>}var path=link.Url.Split('?')[0];var selected=current.Equals(path,StringComparison.OrdinalIgnoreCase)&&(link.Url.Contains('?')?Context.Request.QueryString.Value=="?"+link.Url.Split('?')[1]:!Context.Request.Query.ContainsKey("role"));<a href="@link.Url" aria-current="@(selected?"page":null)"><ui-icon name="@link.Icon"/>@link.Text</a>}
+</nav>
