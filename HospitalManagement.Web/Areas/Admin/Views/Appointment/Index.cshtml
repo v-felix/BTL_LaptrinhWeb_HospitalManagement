@@ -13,7 +13,7 @@
 <form asp-action="Index" method="get" class="filter-panel">
     <div>
         <label for="q" class="form-label">Tên / SĐT / Mã lịch</label>
-        <input id="q" name="q" value="@Model.Q" class="form-control" />
+        <input id="q" name="q" data-quick-search value="@Model.Q" class="form-control" />
     </div>
     <div>
         <label for="date" class="form-label">Ngày khám</label>
@@ -59,7 +59,7 @@
                     </td>
                     <td>@appointment.Doctor.User.FullName</td>
                     <td>@appointment.AppointmentDate.ToString("dd/MM/yyyy")<br />@appointment.AppointmentTime.ToString("HH:mm")</td>
-                    <td><span class="status @appointment.Status">@Display.Status(appointment.Status)</span></td>
+                    <td><ui-status value="@appointment.Status.ToString()"/></td>
                     <td>
                         @if (appointment.Status == BookingStatus.Pending)
                         {
@@ -87,7 +87,7 @@
                                 <input name="q" type="hidden" value="@Model.Q" />
                                 <input name="page" type="hidden" value="@Model.PageNumber" />
                                 <div class="action-row">
-                                    <input name="reason" maxlength="1000" class="form-control form-control-sm" placeholder="Lý do hủy" aria-label="Lý do hủy" required />
+                                    <input name="reason" maxlength="1000" class="form-control form-control-sm" placeholder="Lý do hủy" data-counter-max="1000" aria-label="Lý do hủy" required />
                                     <button class="btn btn-outline-danger btn-sm">Hủy lịch</button>
                                 </div>
                             </form>
