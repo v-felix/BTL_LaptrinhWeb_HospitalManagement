@@ -1,0 +1,3 @@
+@model string
+@{var plate=Model switch{"Awards & Recognition"=>"heart","Community Service"=>"lungs","Facility Update"=>"eye","Medical Innovation"=>"brain","Technology Update"=>"knee",_=>"microscope"};}
+<img class="plate" src="/img/plate/@(plate).webp" width="200" height="200" alt="" aria-hidden="true" loading="lazy" decoding="async"/>

@@ -1,3 +1,18 @@
 @model PrescriptionVM
-@{ViewData["Title"]="Khám & kê đơn";var a=(Appointment)ViewBag.Appointment;}
-<div class="form-panel" style="max-width:900px"><p class="eyebrow">@a.Reference · SỐ @a.SerialNo</p><h2 class="h4">@a.PatientName · @a.PatientAge tuổi</h2><p>@a.AppointmentDate.ToString("dd/MM/yyyy") · @a.AppointmentTime.ToString("HH:mm")</p><p class="prose">Lý do khám: @a.Problem</p><hr/><form asp-action="Prescribe" method="post" data-confirm="Lưu đơn thuốc và hoàn tất lượt khám này?"><input asp-for="AppointmentId" type="hidden"/><input asp-for="RowVersion" type="hidden"/><div asp-validation-summary="All"></div><div class="row g-3"><div class="col-12"><label asp-for="Diagnosis" class="form-label"></label><textarea asp-for="Diagnosis" rows="4" class="form-control"></textarea><span asp-validation-for="Diagnosis"></span></div><div class="col-12"><label asp-for="MedicineDetails" class="form-label"></label><textarea asp-for="MedicineDetails" rows="7" class="form-control"></textarea><span asp-validation-for="MedicineDetails"></span></div><div class="col-12"><label asp-for="Advice" class="form-label"></label><textarea asp-for="Advice" rows="4" class="form-control"></textarea><span asp-validation-for="Advice"></span></div></div><button class="btn btn-primary mt-4">Lưu đơn thuốc & hoàn tất khám</button></form></div>
+@{ViewData["Title"]="Khám & kê đơn";var a=(Appointment)ViewBag.Appointment;var gender=a.PatientGender switch{"Male"=>"Nam","Female"=>"Nữ",_=>"Khác"};}
+<div class="split-form clinical-form">
+    <form asp-action="Prescribe" method="post">
+        <input asp-for="AppointmentId" type="hidden"/><input asp-for="RowVersion" type="hidden"/>
+        <div asp-validation-summary="All"></div>
+        <div class="mb-4"><label asp-for="Diagnosis" class="form-label"></label><textarea asp-for="Diagnosis" rows="4" class="form-control"></textarea><span asp-validation-for="Diagnosis"></span></div>
+        <div class="mb-4"><label asp-for="MedicineDetails" class="form-label"></label><p class="field-help">Mỗi thuốc một dòng gồm tên thuốc, liều và cách dùng, số ngày. Kiểm tra lại nội dung trước khi lưu.</p><textarea asp-for="MedicineDetails" data-prescription-lines rows="8" class="form-control"></textarea><span asp-validation-for="MedicineDetails"></span></div>
+        <div class="mb-4"><label asp-for="Advice" class="form-label"></label><textarea asp-for="Advice" rows="4" class="form-control"></textarea><span asp-validation-for="Advice"></span></div>
+        <p class="notice">Sau khi lưu, người bệnh có thể xem và tải phiếu. Lượt khám sẽ chuyển sang Hoàn tất.</p>
+        <div class="form-actions"><button class="btn btn-primary">Lưu đơn và hoàn tất lượt khám</button><a asp-action="Index" class="link-action">Quay lại lịch khám</a></div>
+    </form>
+    <aside class="clinical-context" aria-label="Hồ sơ người khám">
+        <h2>@a.PatientName</h2><p>@a.PatientAge tuổi · @gender</p>
+        <dl class="context-details"><dt>Mã lịch hẹn</dt><dd class="reference">@a.Reference</dd><dt>Số thứ tự</dt><dd class="time-code">@a.SerialNo.ToString("D2")</dd><dt>Ngày / giờ</dt><dd>@a.AppointmentDate.ToString("dd/MM/yyyy") · @a.AppointmentTime.ToString("HH:mm")</dd><dt>Điện thoại</dt><dd>@a.PatientPhone</dd></dl>
+        <h3>Lý do khám</h3><p class="preserve-lines">@(string.IsNullOrWhiteSpace(a.Problem)?"Chưa ghi lý do khám.":a.Problem)</p>
+    </aside>
+</div>

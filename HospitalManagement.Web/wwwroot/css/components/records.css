@@ -1,0 +1,73 @@
+.table-responsive{position:relative;overflow-x:auto;border:0;border-bottom:1px solid var(--rule);background:var(--paper-raised);border-radius:0}
+.table{width:100%;border-collapse:collapse;vertical-align:middle;font-size:.882rem;line-height:1.45;color:var(--ink);margin:0;--bs-table-bg:transparent;--bs-table-color:var(--ink)}
+.table th{position:sticky;top:0;z-index:1;text-align:left;font-family:var(--font-body);font-size:.824rem;font-weight:600;line-height:1.45;padding:16px;border-bottom:2px solid var(--ink);background:var(--paper-raised);text-transform:none;letter-spacing:normal;white-space:normal}
+.table td{min-height:52px;padding:16px;border-bottom:1px solid var(--rule);background:transparent;overflow-wrap:anywhere}
+.table td p:last-child{margin-bottom:0}
+@media(min-width:600px) and (max-width:899px){.portal:not(.portal--admin) .ledger-responsive thead{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0,0,0,0)}.portal:not(.portal--admin) .ledger-responsive :is(tbody,tr,td){display:block;width:100%}.portal:not(.portal--admin) .ledger-responsive tr{padding:16px;border-bottom:1px solid var(--edge)}.portal:not(.portal--admin) .ledger-responsive td{display:grid;grid-template-columns:140px minmax(0,1fr);gap:12px;border:0;padding:8px 0;min-height:0}.portal:not(.portal--admin) .ledger-responsive td::before{content:attr(data-label);font-size:.824rem;font-weight:500;color:var(--ink-muted)}.portal:not(.portal--admin) .ledger-responsive td .action-row{grid-column:2}}
+.table td form+form{margin-top:8px}
+.table td .reference{font-size:.824rem}
+.table .link-action{font-size:.882rem}
+@media(max-width:599px){.ledger-responsive tbody th[scope=row]{display:block;position:static;padding:12px 0;font-size:1rem}.ledger-responsive .status{white-space:normal}}
+.table tbody tr:hover{background:var(--pine-100)}
+.table :is(td,th).money{text-align:right}
+.table td .action-row{gap:8px}
+.table td:first-child{min-width:140px}
+.table small{font-size:.824rem;font-weight:500}
+.status{display:inline-flex;align-items:center;gap:6px;min-height:28px;padding:3px 8px;border:1px solid var(--edge);border-radius:2px;font-family:var(--font-body);font-size:.824rem;font-weight:500;line-height:1.4;white-space:nowrap;color:var(--ink);background:var(--paper-raised)}
+.status .icon{width:16px;height:16px}
+.status.Pending{background:var(--saffron-200);color:var(--ink)}
+.status.Confirmed,.status.Paid{background:var(--pine-100);color:var(--pine-900);border-color:var(--pine-900)}
+.status.Completed{background:var(--pine-900);color:var(--paper-raised);border-color:var(--pine-900)}
+.status.Cancelled,.status.Refunded{background:transparent;color:var(--vermilion-600);border-color:var(--vermilion-600)}
+.status.Unpaid{border-color:var(--ink-muted);background:transparent;color:var(--ink-muted)}
+.appointment-pagination{display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:16px;margin-top:24px}
+.appointment-pagination p{font-size:.824rem;color:var(--ink);margin:0}
+.pagination{display:flex;list-style:none;padding:0;margin:0;flex-wrap:wrap;gap:4px}
+.page-link{display:flex;align-items:center;justify-content:center;min-width:44px;min-height:44px;padding:8px 12px;color:var(--pine-900);border:1px solid transparent;border-radius:2px;font-size:.882rem;text-decoration:none;background:transparent}
+.page-link:hover{background:var(--pine-100);border-color:var(--edge)}
+.page-item.active .page-link{color:var(--paper-raised);background:var(--pine-900);border-color:var(--pine-900)}
+.page-item.disabled .page-link{color:var(--ink-muted);cursor:default;background:transparent}
+.ticket{width:100%;max-width:420px;background:var(--paper-raised);border:1px solid var(--edge);border-radius:2px;overflow-wrap:anywhere}
+.ticket__header{display:flex;justify-content:space-between;gap:16px;align-items:center;padding:16px 24px;border-bottom:1px solid var(--rule);font-size:.824rem;font-weight:500}
+.ticket__main{display:grid;grid-template-columns:1fr 1fr;gap:24px;align-items:center;padding:24px}
+.ticket__number{display:inline-block;font-family:var(--font-heading);font-weight:600;font-size:96px;line-height:1.25;font-variant-numeric:tabular-nums;border-bottom:4px solid var(--saffron-200)}
+.ticket__label{display:block;font-size:.824rem;font-weight:500;color:var(--ink-muted)}
+.ticket__day{font-family:var(--font-heading);font-size:1.235rem;font-weight:600;line-height:1.4}
+.ticket__time{display:block;font-family:var(--font-code);font-size:1.94rem;font-weight:500;font-variant-numeric:tabular-nums;margin-top:8px}
+.ticket__stub{padding:24px;border-top:1px dashed var(--edge)}
+.ticket__stub dl{display:grid;grid-template-columns:104px minmax(0,1fr);gap:12px 16px;margin:0}
+.ticket__stub dd{margin:0}
+.ticket__actions{padding:0 24px 24px;display:grid;gap:12px}
+.ticket-draft{position:sticky;top:24px}
+.ticket-draft .ticket__number{font-size:72px}
+.ticket-note{border-left:1px solid var(--pine-900);padding-left:16px;margin-top:24px;font-size:.882rem}
+.ticket-layout{display:grid;grid-template-columns:minmax(0,420px) minmax(0,1fr);gap:72px;align-items:start}
+.ticket-next ol{padding:0;list-style-position:inside;counter-reset:next}
+.ticket-next li{padding:20px 0;border-bottom:1px solid var(--rule)}
+.document-sheet{margin-top:48px;max-width:800px;background:var(--paper-raised);padding:32px;border:1px solid var(--edge)}
+.document-sheet header{border-bottom:2px solid var(--ink);padding-bottom:16px;margin-bottom:24px}
+.document-sheet h2{font-size:1.53rem}
+.document-sheet h3{font-size:1.235rem;margin-top:24px}
+.prescription-lines{list-style:none;padding:0;margin:0}
+.prescription-lines li{padding:12px 0;border-bottom:1px solid var(--rule);white-space:pre-wrap;overflow-wrap:anywhere}
+.detail-grid{display:grid;grid-template-columns:1fr 1fr;gap:16px 32px}
+.detail-grid dd{margin-bottom:0}
+.payment-progress{width:100%;height:8px;accent-color:var(--pine-900);border:0;display:block;background:var(--rule)}
+.payment-progress::-webkit-progress-bar{background:var(--rule)}
+.payment-progress::-webkit-progress-value{background:var(--pine-900)}
+.payment-progress::-moz-progress-bar{background:var(--pine-900)}
+.payment-summary{display:grid;gap:12px;margin-block:24px}
+.ledger-totals{display:flex;flex-wrap:wrap;border-block:1px solid var(--edge);margin-bottom:32px;padding-block:24px}
+.ledger-total{flex:1 1 180px;padding:8px 24px;border-right:1px solid var(--rule)}
+.ledger-total:last-child{border-right:0}
+.ledger-total strong{display:block;font-family:var(--font-heading);font-size:2.42rem;font-weight:600;font-variant-numeric:tabular-nums}
+.ledger-total span{font-size:.882rem}
+.empty{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:16px;padding:48px 24px;text-align:center;background:transparent;color:var(--ink-muted)}
+.empty p{max-width:42ch;margin:0}
+.plate{width:160px;height:160px;object-fit:contain;mix-blend-mode:multiply}
+.empty .plate{width:200px;height:200px}
+.message-list{padding:0;list-style:none}
+.message-list li{padding:24px 0;border-bottom:1px solid var(--rule)}
+.message-list .unread{border-left:1px solid var(--pine-900);padding-left:24px}
+@media(max-width:899px){.ticket-layout{grid-template-columns:1fr;gap:32px}.ticket{margin-inline:auto}.ticket-draft{position:static}.detail-grid{grid-template-columns:1fr}.document-sheet{padding:24px 16px}.ledger-total{padding-inline:16px}}
+@media(max-width:599px){.ledger-responsive thead{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0,0,0,0)}.ledger-responsive tbody,.ledger-responsive tr,.ledger-responsive td{display:block;width:100%}.ledger-responsive tr{padding:16px;border-bottom:1px solid var(--edge)}.ledger-responsive td{display:grid;grid-template-columns:104px minmax(0,1fr);gap:12px;border:0;padding:8px 0;min-height:0}.ledger-responsive td::before{content:attr(data-label);font-size:.824rem;font-weight:500;color:var(--ink-muted)}.ledger-responsive td .action-row{grid-column:2}.ledger-responsive td.money{white-space:normal;text-align:left}.ticket__main{gap:16px;padding:24px 16px}.ticket__stub{padding:24px 16px}.ticket__header{padding-inline:16px}.ticket__actions{padding-inline:16px}}

@@ -1,0 +1,5 @@
+@{var path=Context.Request.Path.Value??"/";}
+<a href="/Home/Doctors" aria-current="@(path.StartsWith("/Home/Doctor",StringComparison.OrdinalIgnoreCase)?"page":null)">Bác sĩ</a>
+<a href="/Diagnostic" aria-current="@(path.Equals("/Diagnostic",StringComparison.OrdinalIgnoreCase)?"page":null)">Xét nghiệm</a>
+<a href="/HealthPackage" aria-current="@(path.StartsWith("/HealthPackage",StringComparison.OrdinalIgnoreCase)?"page":null)">Gói khám</a>
+<a href="/Home/News" aria-current="@(path.StartsWith("/Home/News",StringComparison.OrdinalIgnoreCase)||path.StartsWith("/Home/Article",StringComparison.OrdinalIgnoreCase)?"page":null)">Tin tức</a>

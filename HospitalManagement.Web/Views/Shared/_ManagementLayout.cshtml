@@ -1,31 +1,10 @@
-@{ Layout = "_Layout"; }
-<div class="workspace container-fluid">
-<aside class="sidebar no-print"><div class="sidebar-label">KHÔNG GIAN LÀM VIỆC</div><div class="user-label">@User.Identity?.Name</div>
-@if (User.IsInRole(Roles.Admin)) {
-<a asp-area="Admin" asp-controller="Dashboard" asp-action="Index">▦ Tổng quan</a>
-<a asp-area="Admin" asp-controller="User" asp-action="Index">Tài khoản & phân quyền</a>
-<a asp-area="Admin" asp-controller="User" asp-action="Index" asp-route-role="Doctor">Đội ngũ bác sĩ</a>
-<a asp-area="Admin" asp-controller="User" asp-action="Index" asp-route-role="Staff">Nhân viên</a>
-<a asp-area="Admin" asp-controller="Schedule" asp-action="Index">Lịch làm việc</a>
-<a asp-area="Admin" asp-controller="Service" asp-action="Index">Dịch vụ xét nghiệm</a>
-<a asp-area="Admin" asp-controller="HealthCheck" asp-action="Index">Danh mục gói khám</a>
-<a asp-area="Admin" asp-controller="News" asp-action="Index">Quản lý tin tức</a>
-}
-@if (User.IsInRole(Roles.Admin) || User.IsInRole(Roles.Staff)) {
-<a asp-area="Admin" asp-controller="Appointment" asp-action="Index">Lịch hẹn khám</a>
-<a asp-area="Admin" asp-controller="PackageBooking" asp-action="Index">Phiếu gói khám & thu phí</a>
-}
-@if (User.IsInRole(Roles.Doctor)) {
-<a asp-area="Doctor" asp-controller="Appointment" asp-action="Index">Lịch khám của tôi</a>
-<a asp-area="Doctor" asp-controller="Schedule" asp-action="Index">Ca làm việc</a>
-<a asp-area="Doctor" asp-controller="Message" asp-action="Index">Thông báo nội bộ</a>
-}
-@if (User.IsInRole(Roles.Admin) || User.IsInRole(Roles.Diagnostic)) {
-<a asp-area="Diagnostic" asp-controller="Booking" asp-action="Index">Tiếp nhận & trả kết quả</a>
-@if (User.IsInRole(Roles.Diagnostic)) { <a asp-area="Admin" asp-controller="Service" asp-action="Index">Danh mục xét nghiệm</a> }
-}
-<hr/><a asp-area="" asp-controller="Patient" asp-action="Index">Hồ sơ khám cá nhân</a>
-<a asp-area="" asp-controller="Account" asp-action="Profile">Thông tin tài khoản</a>
-<a asp-area="" asp-controller="Home" asp-action="Index">← Về trang chủ</a>
-</aside><section class="work-content"><div class="page-heading"><div><p class="eyebrow">XET HOSPITAL / QUẢN LÝ</p><h1>@ViewData["Title"]</h1></div><span class="text-muted">@HospitalClock.Today.ToString("dd/MM/yyyy")</span></div>@RenderBody()</section></div>
-@section Scripts { @await RenderSectionAsync("Scripts", required: false) }
+@{Layout="_Layout";ViewData["Portal"]=true;var role=User.IsInRole(Roles.Admin)?"Quản trị viên":User.IsInRole(Roles.Doctor)?"Bác sĩ":User.IsInRole(Roles.Staff)?"Tiếp nhận":User.IsInRole(Roles.Diagnostic)?"Kỹ thuật viên":"Bệnh nhân";}
+<div class="portal @(User.IsInRole(Roles.Admin)?"portal--admin":"")"><aside class="portal-sidebar"><a class="brand" href="/"><img src="~/img/brand/logo.svg" width="190" height="32" alt="Xet Hospital — Trang chủ"/></a><div class="portal-user"><strong>@(User.FindFirst("FullName")?.Value??User.Identity?.Name)</strong><span class="portal-role">@role</span></div><partial name="_PortalNavigation"/><div class="portal-sidebar__end"><a class="link-action" href="/">Về trang chủ</a><form asp-area="" asp-controller="Account" asp-action="Logout" method="post"><button class="link-action"><ui-icon name="sign-out"/>Đăng xuất</button></form></div></aside>
+<div class="portal-body"><header class="portal-header"><a href="/" class="portal-mobile-brand" aria-label="Trang chủ"><img src="~/img/brand/logomark.svg" width="28" height="28" alt=""/></a><h1>@ViewData["Title"]</h1><div class="context-bar"><span>@role</span><time data-vietnam-date>@HospitalClock.Today.ToString("dd/MM/yyyy")</time></div><button class="btn js-only" type="button" data-open-dialog="portal-menu" aria-label="Mở điều hướng"><ui-icon name="list"/></button></header><main class="portal-content" id="main-content" tabindex="-1"><partial name="_Notices"/>@RenderBody()</main></div></div>
+<dialog id="portal-menu" class="menu-panel" aria-labelledby="portal-menu-title"><div class="dialog-heading"><h2 id="portal-menu-title">@role</h2><button type="button" class="btn" data-close-dialog aria-label="Đóng điều hướng"><ui-icon name="x"/></button></div><partial name="_PortalNavigation"/><a class="link-action" href="/">Về trang chủ</a><form asp-area="" asp-controller="Account" asp-action="Logout" method="post"><button class="link-action">Đăng xuất</button></form></dialog>
+<nav class="portal-bottom-tabs" aria-label="Tác vụ nhanh">
+@if(User.IsInRole(Roles.Doctor)){<a href="/Doctor/Appointment"><ui-icon name="calendar-blank"/>Lịch khám</a><a href="/Doctor/Schedule"><ui-icon name="clock"/>Ca làm việc</a><a href="/Doctor/Message"><ui-icon name="bell"/>Thông báo</a>}
+else if(User.IsInRole(Roles.Patient)){<a href="/Patient"><ui-icon name="file-text"/>Hồ sơ</a><a href="/Appointment/Book"><ui-icon name="calendar-blank"/>Đặt lịch</a><a href="/Account/Profile"><ui-icon name="user"/>Tài khoản</a>}
+else{<a href="/Dashboard"><ui-icon name="house"/>Tổng quan</a><a href="/Admin/Appointment"><ui-icon name="calendar-blank"/>Lịch khám</a>}
+<button type="button" class="js-only" data-open-dialog="portal-menu"><ui-icon name="list"/>Menu</button></nav><noscript><div class="container"><partial name="_PortalNavigation"/></div></noscript>
+@section Scripts{@await RenderSectionAsync("Scripts",required:false)}

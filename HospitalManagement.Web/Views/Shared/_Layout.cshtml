@@ -1,47 +1,14 @@
-<!DOCTYPE html>
-<html lang="vi">
-<head>
-    <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <title>@ViewData["Title"] · Xet Hospital</title>
-    <link rel="icon" href="~/favicon.ico" />
-    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
-    <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
-</head>
-<body>
-<div class="topbar"><div class="container d-flex justify-content-between"><span>Xet Specialized Hospital · Chăm sóc từ sự thấu hiểu</span><span>Tiếp nhận khám · Thứ 2 – Thứ 7</span></div></div>
-<header class="site-header">
-<nav class="navbar navbar-expand-xl container py-3" aria-label="Điều hướng chính">
-    <a class="brand" asp-area="" asp-controller="Home" asp-action="Index"><span class="brand-mark">✚</span><span>XET HOSPITAL<small>SPECIALIZED HEALTHCARE</small></span></a>
-    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navigation" aria-controls="navigation" aria-expanded="false" aria-label="Mở menu"><span class="navbar-toggler-icon"></span></button>
-    <div class="collapse navbar-collapse" id="navigation">
-    <div class="navbar-nav mx-auto gap-xl-2">
-        <a class="nav-link" asp-area="" asp-controller="Home" asp-action="Index">Trang chủ</a>
-        <a class="nav-link" asp-area="" asp-controller="Home" asp-action="Doctors">Bác sĩ</a>
-        <a class="nav-link" asp-area="" asp-controller="Diagnostic" asp-action="Index">Xét nghiệm</a>
-        <a class="nav-link" asp-area="" asp-controller="HealthPackage" asp-action="Index">Gói khám</a>
-        <a class="nav-link" asp-area="" asp-controller="Home" asp-action="News">Tin tức</a>
-        <a class="nav-link" asp-area="" asp-controller="Home" asp-action="About">Giới thiệu</a>
-    </div>
-    <div class="d-flex align-items-center gap-2 flex-wrap">
-    @if (User.Identity?.IsAuthenticated == true) {
-        <a class="btn btn-light btn-sm" asp-area="" asp-controller="Dashboard" asp-action="Index">Không gian của tôi</a>
-        <form asp-area="" asp-controller="Account" asp-action="Logout" method="post"><button class="btn btn-outline-secondary btn-sm">Đăng xuất</button></form>
-    } else {
-        <a class="btn btn-outline-primary btn-sm" asp-area="" asp-controller="Account" asp-action="Login">Đăng nhập</a>
-    }
-    <a class="btn btn-primary btn-sm" asp-area="" asp-controller="Appointment" asp-action="Book">Đặt lịch khám ↗</a>
-    </div></div>
-</nav>
-</header>
-@if (TempData["Success"] is string success) { <div class="container mt-3"><div class="alert alert-success" role="status">@success</div></div> }
-@if (TempData["Error"] is string error) { <div class="container mt-3"><div class="alert alert-danger" role="alert">@error</div></div> }
-<main id="main-content">@RenderBody()</main>
-<footer class="site-footer"><div class="container"><div class="row g-4"><div class="col-md-6"><h4>XET HOSPITAL</h4><p>Chăm sóc sức khỏe toàn diện, kết nối bệnh nhân với đội ngũ bác sĩ chuyên khoa.</p><small>Hệ thống quản lý bệnh viện · BTL Lập trình Web UTC</small></div><div class="col-md-3"><h6>Dành cho bệnh nhân</h6><a asp-area="" asp-controller="Appointment" asp-action="Book">Đặt lịch khám</a><a asp-area="" asp-controller="Patient" asp-action="Index">Lịch hẹn & hồ sơ</a><a asp-area="" asp-controller="Diagnostic" asp-action="Index">Dịch vụ xét nghiệm</a></div><div class="col-md-3"><h6>Tài khoản</h6><a asp-area="" asp-controller="Account" asp-action="Register">Đăng ký bệnh nhân</a><a asp-area="" asp-controller="Account" asp-action="Profile">Hồ sơ cá nhân</a><a asp-area="" asp-controller="Home" asp-action="About">Về bệnh viện</a></div></div><div class="footer-bottom">© @HospitalClock.Today.Year Xet Specialized Hospital</div></div></footer>
-<script src="~/lib/jquery/dist/jquery.min.js"></script>
-<script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
-<script src="~/lib/jquery-validation/dist/jquery.validate.min.js"></script>
-<script src="~/lib/jquery-validation-unobtrusive/jquery.validate.unobtrusive.min.js"></script>
-<script src="~/js/site.js" asp-append-version="true"></script>
-@await RenderSectionAsync("Scripts", required: false)
+@{var portal=ViewData["Portal"] as bool? == true;}
+<!DOCTYPE html><html lang="vi"><head>
+<meta charset="utf-8"/><meta name="viewport" content="width=device-width, initial-scale=1"/><meta name="theme-color" content="#F6F2E9"/>
+<meta name="description" content="Chọn bác sĩ, khung giờ còn trống và nhận số thứ tự khám. Hệ thống minh họa của đồ án Lập trình Web."/>
+<meta property="og:title" content="Xet Hospital — Đặt lịch khám"/><meta property="og:description" content="Chọn bác sĩ và một khung giờ còn trống. Không cần tài khoản."/><meta property="og:image" content="/img/brand/og.png"/>
+<title>@ViewData["Title"] · Xet Hospital</title><link rel="icon" href="~/favicon.svg" type="image/svg+xml"/><link rel="icon" href="~/favicon.ico" sizes="32x32"/><link rel="apple-touch-icon" href="~/img/brand/favicon-180.png"/>
+<link rel="preload" href="~/fonts/ibm-plex-sans-vietnamese-400-normal.woff2" as="font" type="font/woff2" crossorigin/><link rel="preload" href="~/fonts/source-serif-4-vietnamese-600-normal.woff2" as="font" type="font/woff2" crossorigin/>
+<link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap-grid.min.css"/><link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap-utilities.min.css"/><link rel="stylesheet" href="~/css/site.css" asp-append-version="true"/><link rel="stylesheet" href="~/css/print.css" asp-append-version="true" media="print"/><script src="~/js/boot.js" asp-append-version="true"></script>
+</head><body class="@(portal?"portal-page":"public-page")"><a class="skip-link" href="#main-content">Bỏ qua tới nội dung chính</a>
+@if(portal){@RenderBody()}else{<partial name="_PublicHeader"/><main id="main-content" tabindex="-1"><partial name="_Notices"/>@RenderBody()</main><partial name="_Footer"/>}
+<div id="ui-live" class="visually-hidden" role="status" aria-live="polite"></div>
+<script src="~/lib/jquery/dist/jquery.min.js" defer></script><script src="~/lib/jquery-validation/dist/jquery.validate.min.js" defer></script><script src="~/lib/jquery-validation-unobtrusive/jquery.validate.unobtrusive.min.js" defer></script><script src="~/js/site.js" asp-append-version="true" defer></script><script src="~/js/booking.js" asp-append-version="true" defer></script>
+@await RenderSectionAsync("Scripts",required:false)
 </body></html>
