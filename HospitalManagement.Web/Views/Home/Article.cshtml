@@ -1,3 +1,3 @@
 @model News
 @{ViewData["Title"]=Model.Title;}
-<article class="article-shell"><a asp-action="News">← Tin tức bệnh viện</a><p class="eyebrow mt-4">@Model.Category · @Model.PublishedDate.ToString("dd/MM/yyyy")</p><h1>@Model.Title</h1><p class="lead my-4">@Model.Excerpt</p><div class="prose">@Model.Content</div></article>
+<article class="article-shell"><a asp-action="News" class="link-action"><ui-icon name="arrow-left"/>Tin tức bệnh viện</a><h1>@Model.Title</h1><p class="metadata">@PresentationLabels.NewsCategory(Model.Category) · <time datetime="@Model.PublishedDate.ToString("yyyy-MM-dd")">@Model.PublishedDate.ToString("dd/MM/yyyy")</time></p><p class="lead">@Model.Excerpt</p><div class="prose">@Model.Content</div></article>
